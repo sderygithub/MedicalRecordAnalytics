@@ -1,0 +1,118 @@
+
+Welcome to Medical Payments Analytics!
+======================================
+
+MPA is a short coding challenging developed by Sebastien Dery, created to
+ingest data from publicly available database of medical service payment. The
+limited previous knowledge and time for this challenge forced a number of
+assumption that makes any conclusion based on the ingested data questionnable.
+This serves an educational purpose and the author cannot be held responsible
+for any decision made on this data. The ingestion process is coded in Python, 
+storing data in a MySql database. The frontend rests on Flask/Django.
+
+
+Components
+----------
+
+Medical Payments Analytics consists of:
+
+     1) Python scripts.  These do not need to be compiled.
+     2) MySql database.  Needs to be build and manually created using
+						 the provided setup.db script
+     3) Website. 		 HTML/CSS/JS files
+     4) Documentation.   Minimal and to the point 
+
+
+Building
+--------
+
+This project is build around concepts of functionality. No state are kept in
+memory and no building is required beyong setting up the database
+
+
+Installation
+------------
+
+1) Setup MySql on your database server. Follow instruction for your specific
+environment (https://dev.mysql.com/doc/refman/5.1/en/linux-installation.html).
+Certain aliases makes interaction with the database easier
+
+	alias mysql=/usr/local/mysql/bin/mysql
+	alias mysqladmin=/usr/local/mysql/bin/mysqladmin
+
+2) This project uses Python and a MySql client to execute queries and 
+insertion calls to the database. Install the python mysqlclient using 
+the following command
+
+	pip install mysqlclient
+
+Some errors may appear due to unresolved path. If this should happen make
+sure your environment path knows where mysql is by manually inserting it
+using the following command (adjust path if necessary)
+
+	export PATH=$PATH:/usr/local/mysql/bin
+	
+3) Install flask on your webserver
+
+4) Transfer website on the webserver and edit port communication so they
+correspond to your network topology
+
+
+Improvements
+------------
+
+The Coding Challenge hints at future plans to transfer the database to
+Cassandra. With this in mind, I set out to not overcomplicate with good
+principles of relational database such as modularity. Instead, I focused
+on bringing a query-specific table for what was asked by the challenge
+statement. With this in mind, this project has a table for payment record
+that keeps within its rows all the assumed information required for the query
+
+	Top 20 Paid Physician per State for a specific Payer
+
+With this design in mind, a transfer to Cassandra would be much easier (same
+assumption about the data structure). 
+
+It was also clear from the beginning that I shouldn't try to keep in memory
+each single payer as a List or Dropdown for the user to select (poor UI design
+been repeatedly shown to be time consuming and tedious interaction). Instead, 
+I approached this problem through natural language query. An significant 
+improvement would be to add further NLP capabilties using in-house development 
+or Lucene / Elastic Search. 
+
+This design currently lacks any kind of security measure in terms of encryption
+which would of course be necessary when dealing with sensitive data. 
+
+Improvements could also be made in terms of managing interaction with multiple 
+user trying to access this resource. Event-driven API should be considered
+(e.g. Node.js) in order to make this project scalable
+
+
+Authors & Acknowledgements
+--------------------------
+
+	Sebastien Dery
+
+
+Copyright Notice and Disclaimer
+-------------------------------
+
+Copyright (c) 2015 Sebastien Dery
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

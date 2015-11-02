@@ -1,0 +1,50 @@
+# View statement with ranking
+CREATE VIEW vw_total_per_physician_per_state 
+AS SELECT recipient_state, 
+		physician_profile_id, 
+		SUM(total_amount) as total
+FROM physician_payments
+WHERE manufacturer LIKE '%Genentec%'
+GROUP BY recipient_state, physician_profile_id
+ORDER BY recipient_state, total DESC;
+
+SELECT *
+FROM (SELECT recipient_state, physician_profile_id, t.total,
+		@phys_id := CASE WHEN @stateclass <> recipient_state THEN 0 ELSE @phys_id+1 END AS rn,
+		@stateclass := recipient_state AS clset
+	FROM
+		(SELECT @phy := -1) s,
+		(SELECT @stateclass := -1) c,
+		vw_total_per_physician_per_state t) et
+	WHERE et.rn <= 19;
+
+# Single statement with ranking
+SELECT *
+FROM 
+(SELECT recipient_state, 
+		physician_profile_id, 
+		t.total,
+		@phy := CASE WHEN @stateclass <> recipient_state THEN 0 ELSE @phy+1 END as rank,
+		@stateclass := recipient_state AS clset
+FROM
+	(SELECT @phy := -1) s,
+	(SELECT @stateclass := -1) c,
+	(SELECT recipient_state, 
+			physician_profile_id, 
+			SUM(total_amount) as total
+	FROM physician_payments
+	WHERE manufacturer LIKE '%Genentec%'
+	GROUP BY recipient_state, physician_profile_id
+	ORDER BY recipient_state, total DESC) t
+	) dataframe
+WHERE dataframe.rank <= 19;
+
+# Statement without ranking
+SELECT  recipient_state, 
+		physician_profile_id, 
+		SUM(total_amount) as total,
+FROM physician_payments, (SELECT @curRank := 0)
+WHERE manufacturer LIKE '%Genentec%'
+GROUP BY recipient_state, physician_profile_id
+ORDER BY recipient_state, physician_profile_id, total DESC
+

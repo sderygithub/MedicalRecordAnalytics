@@ -1,0 +1,13 @@
+CREATE DATABASE grandrounds;
+
+USE grandrounds;
+
+CREATE TABLE physician_payments (
+	record_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	physician_profile_id NUMERIC(38,0) NOT NULL,
+	physician_first_name VARCHAR(20) NOT NULL,
+	physician_last_name VARCHAR(35) NOT NULL,
+	recipient_state VARCHAR(2) NOT NULL,
+	total_amount FLOAT NOT NULL,
+	manufacturer VARCHAR(100)
+);
